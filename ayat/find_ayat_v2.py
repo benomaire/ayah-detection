@@ -2,16 +2,16 @@ import cv2
 import sys
 
 # new madani
-WIDTH_MIN = 60
-WIDTH_MAX = 75
-HEIGHT_MIN = 88
-HEIGHT_MAX = 96
+WIDTH_MIN = 50
+WIDTH_MAX = 62
+HEIGHT_MIN = 70
+HEIGHT_MAX = 80
 
 
 def find_ayat(img_rgb):
     img_gray = cv2.cvtColor(img_rgb, cv2.COLOR_BGR2GRAY)
-    binarized = cv2.threshold(img_gray, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    contours = cv2.findContours(binarized.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)[0]
+    thresh = cv2.threshold(img_gray, 230, 255,  cv2.THRESH_BINARY_INV)[1]
+    contours = cv2.findContours(thresh.copy(), cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)[0]
 
     results = []
     selected_contours = []
@@ -19,14 +19,14 @@ def find_ayat(img_rgb):
         (x, y, w, h) = cv2.boundingRect(contour)
         if WIDTH_MIN < w < WIDTH_MAX and HEIGHT_MIN < h < HEIGHT_MAX:
             is_marker = False
-            for row in range(y, y + h):
+            for row in range(y + int(h/4), y + int(3*h/4)):
                 if is_marker:
                     break
-                for col in range(x, x + int(h / 2)):
+                for col in range(x + int(w/4), x + int(3*w/4)):
                     if row >= img_rgb.shape[0] or col >= img_rgb.shape[1]:
                         continue
                     (b, g, r) = img_rgb[row, col]
-                    if b > 200 and g > 150 and g < 200 and r < 50:
+                    if b > 185 and b < 195 and g > 225 and g < 240 and r > 185 and r < 195:
                         is_marker = True
                         break
             if is_marker:
@@ -39,7 +39,7 @@ def find_ayat(img_rgb):
 
 def draw(img_rgb, contours, output):
     for contour in contours:
-        cv2.drawContours(img_rgb, [contour], -1, (240, 0, 159), 3)
+        cv2.drawContours(img_rgb, [contour], -1, (0, 0, 255), 9)
     cv2.imwrite(output, img_rgb)
 
 

@@ -60,7 +60,7 @@ def main():
     global end_of_ayah, sura, ayah, sura_ayat, default_lines_to_skip
 
     lines_to_skip = 0
-    for i in range(3, 605):
+    for i in range(1, 605):
         image_dir = sys.argv[1] + '/'
         filename = 'page' + str(i).zfill(3) + '.jpg'
         print(filename)
@@ -68,7 +68,7 @@ def main():
         # find lines
         image = Image.open(image_dir + filename).convert('RGBA')
 
-        lines = find_lines(image, 110, 35, 0)
+        lines = find_lines(image, 114, 25, 1)
         print('found: %d lines on page %d' % (len(lines), i))
 
         img_rgb = cv2.imread(image_dir + filename)

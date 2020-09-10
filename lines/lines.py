@@ -117,7 +117,7 @@ def main():
     image = Image.open(sys.argv[1]).convert('RGBA')
 
     # tweak this for the pages
-    lines = find_lines(image, 110, 35, 0)
+    lines = find_lines(image, 114, 25, 1)
     for line in lines:
         print(line)
     draw(image, lines, 'test.png')
